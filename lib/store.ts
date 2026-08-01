@@ -54,7 +54,8 @@ export const useGameStore = create<GameState>()(
         if (flag.trim() === level.flag) {
           const already = get().completed.includes(levelId);
           if (!already) {
-            const next = levels.find((l) => parseInt(l.id, 10) === parseInt(levelId, 10) + 1);
+            const currentIndex = levels.findIndex((l) => l.id === levelId);
+            const next = currentIndex >= 0 ? levels[currentIndex + 1] : undefined;
             set((state) => ({
               completed: [...state.completed, levelId],
               xp: state.xp + level.xp,
