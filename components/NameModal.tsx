@@ -12,7 +12,8 @@ export default function NameModal() {
   const open = !username;
 
   const save = () => {
-    const name = draft.trim() || 'Anonymous';
+    const name = draft.trim();
+    if (!name) return;
     setUsername(name);
   };
 

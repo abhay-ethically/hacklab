@@ -149,15 +149,28 @@ export const useGameStore = create<GameState>()(
         set({ leaderboard: list.slice(0, 25) });
       },
 
-      reset: () => set({
-        xp: 0,
-        completed: [],
-        unlocked: initialUnlocked,
-        hintUsed: [],
-        writeups: {},
-        username: '',
-        leaderboard: [],
-      })
+      reset: () =>
+        set((state) => {
+          const list = state.leaderboard.filter((e) => e.name !== state.username);
+          if (state.username) {
+            list.push({
+              name: state.username,
+              xp: 0,
+              completed: 0,
+              updatedAt: new Date().toISOString(),
+            });
+            list.sort((a, b) => b.xp - a.xp || b.completed - a.completed);
+          }
+          return {
+            xp: 0,
+            completed: [],
+            unlocked: initialUnlocked,
+            hintUsed: [],
+            writeups: {},
+            username: state.username,
+            leaderboard: list.slice(0, 25),
+          };
+        }),
     }),
     { name: 'hacklab-store' }
   )
