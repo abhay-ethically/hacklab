@@ -197,6 +197,9 @@ export async function runCommand(raw: string, ctx: CommandContext): Promise<Comm
       const path = args[1] || '/';
       const perm = args.includes('-perm') && args.includes('-4000');
       if (perm) {
+        if (ctx.level?.id === '10') {
+          return { output: `/usr/bin/vim\n${ctx.level.flag}` };
+        }
         const matches = findSuid(ctx.vfs.root);
         return { output: matches.join('\n') };
       }
@@ -325,6 +328,24 @@ export async function runCommand(raw: string, ctx: CommandContext): Promise<Comm
 
     case 'john': {
       const file = args[1] || 'hash.txt';
+      if (ctx.level?.id === '9' && file.toLowerCase().includes('hash')) {
+        return {
+          output:
+            'Loaded 1 password hash (Raw MD5 [MD5 128/128])\n' +
+            'password         (?)\n' +
+            '1g 0:00:00:00 DONE (2024-01-01 00:00) 100.00%\n' +
+            `${ctx.level.flag}\n`,
+        };
+      }
+      if (ctx.level?.id === '20' && (file.toLowerCase().includes('tgs') || file.toLowerCase().includes('spn'))) {
+        return {
+          output:
+            'Loaded 1 password hash (Kerberos 5, etype 23, TGS-REP [BSB])\n' +
+            'AdminPass1!      (MSSQLService)\n' +
+            '1g 0:00:00:05 DONE (2024-01-01 00:00) 0.20g/s\n' +
+            `${ctx.level.flag}\n`,
+        };
+      }
       const content = readFile(ctx, file);
       if (content === null) return { output: `john: ${file}: No such file or directory` };
       if (content.includes('5f4dcc3b5aa765d61d8327deb882cf99')) {
@@ -422,8 +443,9 @@ export async function runCommand(raw: string, ctx: CommandContext): Promise<Comm
       const key = iIdx > 0 ? args[iIdx] : '';
       const keyPath = resolveAbsolute(ctx.vfs.cwd, key || 'id_rsa');
       const keyNode = getNode(ctx.vfs.root, '/', keyPath);
-      if (key && keyNode && keyNode.node.type === 'file' && args.some((a) => a.includes('root@target'))) {
-        return { output: 'root@target:~# whoami\nroot\nFLAG{ssh_key_hijack_achieved}' };
+      if ((key && keyNode && keyNode.node.type === 'file' && args.some((a) => a.includes('root@target'))) ||
+          (ctx.level?.id === '19' && args.some((a) => a.includes('root@target')))) {
+        return { output: `root@target:~# whoami\nroot\n${ctx.level ? ctx.level.flag : 'FLAG{ssh_key_hijack_achieved}'}` };
       }
       if (args.some((a) => a.includes('root@target'))) {
         return { output: 'Permission denied (publickey,password).\nTry using an identity file: ssh -i <key> root@target' };

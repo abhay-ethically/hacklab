@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Github, Chrome } from 'lucide-react';
+import { Chrome } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 export default function LoginPage() {
@@ -10,21 +10,6 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const supabase = createClient();
-
-  const signInWithGitHub = async () => {
-    setLoading(true);
-    setError(null);
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'github',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-    }
-  };
 
   const signInWithGoogle = async () => {
     setLoading(true);
@@ -48,28 +33,17 @@ export default function LoginPage() {
           Operator Auth
         </h1>
         <p className="mb-6 font-mono text-xs text-slate-400">
-          Sign in securely to record verified scores.
+          Sign in securely with Google to record verified scores.
         </p>
 
-        <div className="space-y-3">
-          <button
-            onClick={signInWithGitHub}
-            disabled={loading}
-            className="flex w-full items-center justify-center gap-2 rounded bg-hack-green/20 py-3 font-mono text-sm font-bold text-hack-green transition hover:bg-hack-green/30 disabled:opacity-50"
-          >
-            <Github className="h-4 w-4" />
-            Sign in with GitHub
-          </button>
-
-          <button
-            onClick={signInWithGoogle}
-            disabled={loading}
-            className="flex w-full items-center justify-center gap-2 rounded bg-hack-cyan/20 py-3 font-mono text-sm font-bold text-hack-cyan transition hover:bg-hack-cyan/30 disabled:opacity-50"
-          >
-            <Chrome className="h-4 w-4" />
-            Sign in with Google
-          </button>
-        </div>
+        <button
+          onClick={signInWithGoogle}
+          disabled={loading}
+          className="flex w-full items-center justify-center gap-2 rounded bg-hack-cyan/20 py-3 font-mono text-sm font-bold text-hack-cyan transition hover:bg-hack-cyan/30 disabled:opacity-50"
+        >
+          <Chrome className="h-4 w-4" />
+          {loading ? 'Redirecting...' : 'Sign in with Google'}
+        </button>
 
         {error && (
           <p className="mt-4 font-mono text-xs text-hack-red">{error}</p>
