@@ -318,7 +318,7 @@ function XssComment({ data, onSuccess }: { data: any; onSuccess: () => void }) {
       <div className="space-y-2">
         {comments.map((c, i) => (
           <div key={i} className="rounded border border-hack-green/10 bg-hack-bg p-2 font-mono text-xs text-slate-300">
-            <div dangerouslySetInnerHTML={{ __html: c }} />
+            <p className="whitespace-pre-wrap break-words">{c}</p>
           </div>
         ))}
       </div>
