@@ -269,7 +269,8 @@ export async function runCommand(raw: string, ctx: CommandContext): Promise<Comm
           '/admin_panel_v2/        (Status: 200) [Size: 1234]\n' +
           '/api/v1/                (Status: 200) [Size: 256]\n' +
           '/config.bak             (Status: 200) [Size: 89]\n' +
-          'FLAG{gobuster_f0rce}',
+          `${ctx.level ? ctx.level.flag : 'FLAG{dirb_hidden_d00r}'}`,
+
       };
     }
 
