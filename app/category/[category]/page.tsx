@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { levels, getLevel } from '@/lib/levelData';
+import { levels } from '@/lib/levelData';
 import { getCategoryBySlug, slugForCategory } from '@/lib/levels/categories';
 
 export function generateStaticParams() {
@@ -23,20 +23,17 @@ export default function CategoryPage({ params }: { params: { category: string } 
         <span className="font-mono text-sm text-slate-500">{info.count} missions</span>
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {categoryLevels.map((level) => {
-          const l = getLevel(level.id)!;
-          return (
-            <Link
-              key={l.id}
-              href={`/play/${l.id}`}
-              className="block h-full rounded border border-hack-green/20 bg-hack-panel/40 p-4 transition hover:border-hack-green/50 hover:shadow-[0_0_15px_rgba(0,255,102,0.1)]"
-            >
-              <span className="font-mono text-xs text-slate-500">#{l.id}</span>
-              <h3 className="mt-1 font-mono text-sm font-bold text-slate-200">{l.title}</h3>
-              <p className="mt-2 line-clamp-2 font-mono text-xs text-slate-400">{l.description}</p>
-            </Link>
-          );
-        })}
+        {categoryLevels.map((level) => (
+          <Link
+            key={level.id}
+            href={`/play/${level.id}`}
+            className="block h-full rounded border border-hack-green/20 bg-hack-panel/40 p-4 transition hover:border-hack-green/50 hover:shadow-[0_0_15px_rgba(0,255,102,0.1)]"
+          >
+            <span className="font-mono text-xs text-slate-500">#{level.id}</span>
+            <h3 className="mt-1 font-mono text-sm font-bold text-slate-200">{level.title}</h3>
+            <p className="mt-2 line-clamp-2 font-mono text-xs text-slate-400">{level.description}</p>
+          </Link>
+        ))}
       </div>
       <div className="mt-6">
         <Link href="/" className="font-mono text-sm text-hack-green hover:underline">
