@@ -8,6 +8,7 @@ const COMMANDS = [
   'chmod',
   'clear',
   'curl',
+  'dig',
   'dirb',
   'echo',
   'exiftool',
@@ -27,12 +28,16 @@ const COMMANDS = [
   'strings',
   'submit-flag',
   'sudo',
+  'telnet',
   'touch',
   'vim',
   'whoami',
   'GetUserSPNs.py',
   'GetUserSPNs',
   'impacket-GetUserSPNs.py',
+  'GetNPUsers.py',
+  'GetNPUsers',
+  'impacket-GetNPUsers.py',
 ];
 
 export interface AutocompleteResult {

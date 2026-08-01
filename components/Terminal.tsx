@@ -7,6 +7,7 @@ import { createVFS } from '@/lib/vfs';
 import { runCommand, CommandContext } from '@/lib/commandRunner';
 import { autocomplete } from '@/lib/autocomplete';
 import { getLevel, Level } from '@/lib/levelData';
+import { a } from '@/lib/ansi';
 
 export default function Terminal({ levelId }: { levelId: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -63,7 +64,12 @@ export default function Terminal({ levelId }: { levelId: string }) {
       termObjRef.current = term;
       fitRef.current = fit;
 
-      term.write('\x1b[1;32mWelcome to HackLab v1.0\x1b[0m — type `help` for commands.\r\n');
+      term.write(
+        `${a.bCyan}╔════════════════════════════════════════╗${a.reset}\r\n` +
+          `${a.bCyan}║${a.reset}  ${a.bGreen}HackLab v1.0${a.reset} — Cybersecurity CTF     ${a.bCyan}║${a.reset}\r\n` +
+          `${a.bCyan}╚════════════════════════════════════════╝${a.reset}\r\n` +
+          `Type ${a.bGreen}help${a.reset} to see available commands.\r\n`
+      );
       prompt();
 
       const onData = (data: string) => {
@@ -154,7 +160,10 @@ export default function Terminal({ levelId }: { levelId: string }) {
     };
   }, [levelId]);
 
-  const promptText = () => `user@hacklab:${vfsRef.current.cwd}$ `;
+  const formatCwd = (cwd: string) => (cwd === '/home/user' ? '~' : cwd);
+
+  const promptText = () =>
+    `${a.bGreen}user${a.reset}@${a.bGreen}hacklab${a.reset}:${a.bAmber}${formatCwd(vfsRef.current.cwd)}${a.reset}$ `;
 
   const prompt = () => {
     if (!termObjRef.current) return;

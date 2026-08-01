@@ -1,5 +1,6 @@
 import { VFSState, getNode, listNodes, resolveAbsolute, findSuid, findFiles } from './vfs';
 import { Level } from './levelData';
+import { a } from './ansi';
 
 export interface CommandResult {
   output: string;
@@ -99,20 +100,58 @@ export async function runCommand(raw: string, ctx: CommandContext): Promise<Comm
   const cmd = args[0];
 
   switch (cmd) {
-    case 'help':
+    case 'help': {
+      const cat = (title: string, items: string[]) =>
+        `${a.bCyan}── ${title} ${a.reset}\n` + items.map((it) => `  ${a.bGreen}${it}${a.reset}`).join('\n');
       return {
-        output:
-          'Built-in commands:\n' +
-          '  ls [-la] [dir]   cd <dir>   cat <file>   grep <pattern> <file>\n' +
-          '  find <path> -perm -4000   echo <text>   clear   help   whoami\n' +
-          '  pwd   sudo -l   history   submit-flag <FLAG{...}>\n' +
-          'Cyber tools:\n' +
-          '  nmap <ip>   dirb <url>   gobuster dir -u <url>   subfinder -d <domain>\n' +
-          '  dig <record> <server>   exiftool <file>   strings <file>   base64 [-d] <string>\n' +
-          '  md5 <string>   john <file>   curl <url>   aws s3 ls <bucket>   aws s3api <action>\n' +
-          '  GetUserSPNs.py -dc-ip <ip> -request   GetNPUsers.py -dc-ip <ip> -request\n' +
-          '  ssh -i <key> root@target   vim -c \'!sh\'   sudo python3 -c "..."\n',
+        output: [
+          '',
+          cat('Shell', [
+            'ls [-la] [dir]',
+            'cd <dir>',
+            'cat <file>',
+            'grep <pattern> <file>',
+            'find <path> -perm -4000',
+            'pwd',
+            'echo <text>',
+            'clear',
+            'history',
+            'whoami',
+          ]),
+          '',
+          cat('Privilege escalation', ['sudo -l', "sudo python3 -c '...'", "vim -c '!sh'"]),
+          '',
+          cat('Recon & web', [
+            'nmap <ip>',
+            'dirb <url>',
+            'gobuster dir -u <url>',
+            'subfinder -d <domain>',
+            'dig axfr @<server> <domain>',
+            'curl <url>',
+          ]),
+          '',
+          cat('Forensics & crypto', [
+            'exiftool <file>',
+            'strings <file>',
+            'base64 [-d] <string>',
+            'md5 <string>',
+            'john <file>',
+          ]),
+          '',
+          cat('Cloud & AD', [
+            'aws s3 ls <bucket>',
+            'aws s3api <action>',
+            'GetUserSPNs.py -dc-ip <ip> -request',
+            'GetNPUsers.py -dc-ip <ip> -request',
+          ]),
+          '',
+          cat('Remote access', ['ssh -i <key> root@target', 'ftp <ip>', 'telnet <ip> <port>']),
+          '',
+          `${a.bAmber}submit-flag <FLAG{...}>${a.reset}  ${a.dim}— submit your captured flag${a.reset}`,
+          '',
+        ].join('\n'),
       };
+    }
 
     case 'whoami':
       return { output: 'user' };
@@ -143,20 +182,27 @@ export async function runCommand(raw: string, ctx: CommandContext): Promise<Comm
       }
       const entries = listNodes(ctx.vfs.root, ctx.vfs.cwd, path, all);
       if (!entries) return { output: `ls: cannot access ${path}: No such file or directory` };
-      const max = Math.max(...entries.map((e) => e.name.length));
       const now = new Date().toLocaleString('en-US', { month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+
+      const colorName = (e: any) => {
+        if (e.node.type === 'dir') return `${a.bBlue}${e.name}${a.reset}`;
+        if (e.name.startsWith('.')) return `${a.dim}${e.name}${a.reset}`;
+        return e.name;
+      };
+
       if (long) {
         return {
           output: entries
             .map((e) => {
               const perms = modeString(e.node.mode | (e.node.type === 'dir' ? 0o40000 : 0));
               const size = e.node.type === 'file' ? (e.node.content?.length ?? 0) : 4096;
-              return `${perms} ${e.node.owner} ${e.node.owner} ${size.toString().padStart(8)} ${now} ${e.name}`;
+              const colored = colorName(e);
+              return `${perms} ${a.bGreen}${e.node.owner}${a.reset} ${a.bGreen}${e.node.owner}${a.reset} ${size.toString().padStart(8)} ${now} ${colored}`;
             })
             .join('\n'),
         };
       }
-      return { output: entries.map((e) => e.name).join('  ') };
+      return { output: entries.map((e) => colorName(e)).join('  ') };
     }
 
     case 'cat': {
