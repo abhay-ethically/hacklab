@@ -6,6 +6,7 @@ import { Terminal, Trophy, Play } from 'lucide-react';
 import { levels } from '@/lib/levelData';
 import { useGameStore, rankForCompleted } from '@/lib/store';
 import { categories } from '@/lib/levels/categories';
+import LeaderboardPreview from '@/components/LeaderboardPreview';
 import LoginModal from '@/components/LoginModal';
 
 export default function Dashboard() {
@@ -37,6 +38,8 @@ export default function Dashboard() {
           </div>
         </div>
       </section>
+
+      <LeaderboardPreview />
 
       <h2 className="mb-4 font-mono text-sm uppercase tracking-widest text-hack-green/70">
         Categories

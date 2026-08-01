@@ -2,9 +2,10 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { Volume2, VolumeX, Terminal, Trophy, User, LogIn, LogOut } from 'lucide-react';
+import { Volume2, VolumeX, Terminal, Trophy, User, LogIn, LogOut, Target } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useGameStore, rankForCompleted } from '@/lib/store';
+import { levels } from '@/lib/levelData';
 import { createClient } from '@/lib/supabase/client';
 import ThemeToggle from '@/components/ThemeToggle';
 
@@ -73,11 +74,19 @@ export default function Header() {
                 <span className="text-hack-cyan">{username}</span>
               </span>
             )}
+            <Link
+              href="/leaderboards"
+              className="hidden items-center gap-1 text-hack-amber hover:underline sm:flex"
+              title="Leaderboards"
+            >
+              <Target className="h-3 w-3" />
+              Leaderboards
+            </Link>
             <span>
               <span className="text-hack-green">XP:</span> {xp}
             </span>
             <span>
-              <span className="text-hack-green">LVL:</span> {completed.length}/25
+              <span className="text-hack-green">LVL:</span> {completed.length}/{levels.length}
             </span>
           </div>
 
