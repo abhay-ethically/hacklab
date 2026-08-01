@@ -108,8 +108,8 @@ export async function runCommand(raw: string, ctx: CommandContext): Promise<Comm
           '  pwd   sudo -l   history   submit-flag <FLAG{...}>\n' +
           'Cyber tools:\n' +
           '  nmap <ip>   dirb <url>   gobuster dir -u <url>   subfinder -d <domain>\n' +
-          '  exiftool <file>   strings <file>   base64 [-d] <string>   md5 <string>\n' +
-          '  john <file>   curl <url>   aws s3 ls <bucket>   aws s3api <action>\n' +
+          '  dig <record> <server>   exiftool <file>   strings <file>   base64 [-d] <string>\n' +
+          '  md5 <string>   john <file>   curl <url>   aws s3 ls <bucket>   aws s3api <action>\n' +
           '  GetUserSPNs.py -dc-ip <ip> -request   GetNPUsers.py -dc-ip <ip> -request\n' +
           '  ssh -i <key> root@target   vim -c \'!sh\'   sudo python3 -c "..."\n',
       };
@@ -189,6 +189,13 @@ export async function runCommand(raw: string, ctx: CommandContext): Promise<Comm
             'USER=user\n' +
             'SECRET=super-secret-api-key\n' +
             `FLAG=${ctx.level.flag}\n`,
+        };
+      }
+      if (ctx.level?.id === '36' && (args[1] === '/home/user/caesar.txt' || args[1] === 'caesar.txt')) {
+        return {
+          output:
+            'Pb kdsshqqhvv kxps wkurxj wkh xqlghgphqw, wklv lv wkh whuplqdo fdwxw-\n' +
+            `...${ctx.level.flag}...\n`,
         };
       }
       const content = readFile(ctx, args[1]);
@@ -331,6 +338,13 @@ export async function runCommand(raw: string, ctx: CommandContext): Promise<Comm
           output:
             '...enc0d3d...\n' +
             '...k3y...\n' +
+            `...${ctx.level.flag}...\n`,
+        };
+      }
+      if (ctx.level?.id === '36' && (args[1].includes('caesar') || args[1].includes('caesar.txt'))) {
+        return {
+          output:
+            'Pb kdsshqqhvv kxps wkurxj wkh xqlghgphqw, wklv lv wkh whuplqdo fdwxw-\n' +
             `...${ctx.level.flag}...\n`,
         };
       }
@@ -547,6 +561,21 @@ export async function runCommand(raw: string, ctx: CommandContext): Promise<Comm
           'vpn.target.com\n' +
           `${ctx.level ? ctx.level.flag : 'FLAG{subdomain_recon_hunter}'}`,
       };
+    }
+
+    case 'dig': {
+      if (args[0] === 'axfr' || (args[1] === 'axfr' && args.includes('target.com'))) {
+        return {
+          output:
+            ';; XFR size: 6 records\n' +
+            'target.com.           3600    IN      SOA     ns1.target.com. admin.target.com.\n' +
+            'target.com.           3600    IN      A       10.0.0.1\n' +
+            'admin.target.com.     3600    IN      A       10.0.0.10\n' +
+            'dev.target.com.       3600    IN      A       10.0.0.20\n' +
+            `flag.target.com.      3600    IN      TXT     "${ctx.level ? ctx.level.flag : 'FLAG{dns_zone_transfer_recon}'}"\n`,
+        };
+      }
+      return { output: `usage: dig axfr @<server> <domain>` };
     }
 
     case 'GetNPUsers.py':

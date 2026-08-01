@@ -71,6 +71,19 @@ export const recon: Level[] = [
     hints: ['Run `subfinder -d target.com`', 'Look for `admin.target.com` in the output.'],
   },
   {
+    id: '35',
+    title: 'DNS Zone Transfer',
+    category: 'Reconnaissance',
+    description:
+      'The target DNS server is misconfigured and allows AXFR zone transfers, leaking every subdomain record.',
+    objective: 'Run a zone transfer with dig to list all DNS records and capture the flag.',
+    target: 'ns1.target.com',
+    type: 'terminal',
+    flag: 'FLAG{dns_zone_transfer_recon}',
+    xp: 120,
+    hints: ['Use `dig axfr @ns1.target.com target.com`', 'Zone transfers dump every record at once.'],
+  },
+  {
     id: '31',
     title: 'Robots.txt Leak',
     category: 'Web Reconnaissance',

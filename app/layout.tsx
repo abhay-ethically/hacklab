@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CommandPalette from '@/components/CommandPalette';
 import NameModal from '@/components/NameModal';
+import ServiceWorker from '@/components/ServiceWorker';
 
 const mono = JetBrains_Mono({
   subsets: ['latin'],
@@ -15,6 +16,12 @@ const mono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: 'HackLab — Cybersecurity CTF',
   description: 'A gamified, client-side Capture The Flag platform for cybersecurity training.',
+  manifest: '/manifest.json',
+  appleWebApp: { capable: true, statusBarStyle: 'black-translucent', title: 'HackLab' },
+};
+
+export const viewport = {
+  themeColor: '#00ff66',
 };
 
 export default function RootLayout({
@@ -25,6 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={mono.variable}>
       <body className="min-h-screen bg-hack-bg font-mono text-slate-200">
+        <ServiceWorker />
         <Header />
         <CommandPalette />
         <NameModal />

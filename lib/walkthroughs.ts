@@ -202,4 +202,22 @@ export const WALKTHROUGHS: Record<string, string[]> = {
     'The flag is (FLAG{teln3t_b4nn3r_r34d}).',
     'Run `submit-flag <flag>`.',
   ],
+  '34': [
+    'Open the Web Preview for the profile page.',
+    'The current id is 500. Try changing the input to 0.',
+    'When id=0, the admin profile is revealed and the flag (FLAG{idor_hidden_admin_id}) is captured.',
+    'Run `submit-flag <flag>`.',
+  ],
+  '35': [
+    'Run `dig axfr @ns1.target.com target.com` to request a full zone transfer.',
+    'The output lists all DNS records including a TXT record for flag.target.com.',
+    'The TXT record contains the flag (FLAG{dns_zone_transfer_recon}).',
+    'Run `submit-flag <flag>`.',
+  ],
+  '36': [
+    'Run `cat /home/user/caesar.txt` or `strings caesar.txt` to view the encrypted message.',
+    'The ciphertext is shifted by 3 (Caesar cipher).',
+    'The hidden flag at the end is (FLAG{caesar_shift_three}).',
+    'Run `submit-flag <flag>`.',
+  ],
 };

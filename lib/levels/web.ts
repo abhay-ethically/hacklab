@@ -119,6 +119,27 @@ export const web: Level[] = [
     },
   },
   {
+    id: '34',
+    title: 'Hidden Admin Profile',
+    category: 'Web Exploitation',
+    description:
+      'The user profile endpoint is vulnerable to IDOR. The admin profile is hidden at an unexpected ID.',
+    objective: 'Change the profile id to reveal the admin account and flag.',
+    target: 'http://target/profile?id=500',
+    type: 'web',
+    flag: 'FLAG{idor_hidden_admin_id}',
+    xp: 120,
+    hints: ['Try sequential ids below 500', 'The admin profile is at id=0.'],
+    webComponent: {
+      type: 'idor-profile',
+      data: {
+        url: 'http://target/profile?id=500',
+        currentId: '500',
+        targetId: '0',
+      },
+    },
+  },
+  {
     id: '17',
     title: 'XSS Stealer',
     category: 'Web Exploitation',

@@ -15,6 +15,19 @@ export const crypto: Level[] = [
     hints: ['Try `john /home/user/hash.txt`', 'The plaintext is one of the worst passwords.'],
   },
   {
+    id: '36',
+    title: 'Caesar Cipher',
+    category: 'Cryptography',
+    description:
+      'An ancient shift cipher was used to hide a message. The ciphertext is in /home/user/caesar.txt and uses a shift of 3.',
+    objective: 'Decode the Caesar-encrypted file to recover the flag.',
+    target: '/home/user/caesar.txt',
+    type: 'terminal',
+    flag: 'FLAG{caesar_shift_three}',
+    xp: 100,
+    hints: ['Try `cat /home/user/caesar.txt`', 'A Caesar shift of 3 moves every letter 3 positions back in the alphabet.'],
+  },
+  {
     id: '28',
     title: 'XOR Ciphertext',
     category: 'Cryptography',
