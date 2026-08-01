@@ -40,4 +40,15 @@ begin
   end if;
 end $$;
 
-alter publication supabase_realtime add table public.leaderboard_totals;
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_publication_tables
+    where pubname = 'supabase_realtime'
+      and schemaname = 'public'
+      and tablename = 'leaderboard_totals'
+  ) then
+    alter publication supabase_realtime add table public.leaderboard_totals;
+  end if;
+end $$;
