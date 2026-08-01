@@ -5,13 +5,16 @@ import { motion } from 'framer-motion';
 import { Terminal, Trophy, Play } from 'lucide-react';
 import { levels } from '@/lib/levelData';
 import { useGameStore, rankForCompleted } from '@/lib/store';
+import LoginModal from '@/components/LoginModal';
 
 export default function Dashboard() {
   const { completed, unlocked } = useGameStore();
   const rank = rankForCompleted(completed.length);
 
   return (
-    <div className="mx-auto max-w-6xl overflow-y-auto p-6">
+    <>
+      <LoginModal />
+      <div className="mx-auto max-w-6xl overflow-y-auto p-6">
       <section className="mb-8 rounded border border-hack-green/20 bg-hack-panel/40 p-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
@@ -83,5 +86,6 @@ export default function Dashboard() {
         })}
       </div>
     </div>
+    </>
   );
 }
