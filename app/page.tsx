@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Terminal, Trophy, Play } from 'lucide-react';
 import { levels } from '@/lib/levelData';
 import { useGameStore, rankForCompleted } from '@/lib/store';
+import { categories } from '@/lib/levels/categories';
 import LoginModal from '@/components/LoginModal';
 
 export default function Dashboard() {
@@ -36,6 +37,22 @@ export default function Dashboard() {
           </div>
         </div>
       </section>
+
+      <h2 className="mb-4 font-mono text-sm uppercase tracking-widest text-hack-green/70">
+        Categories
+      </h2>
+      <div className="mb-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {categories.map((cat) => (
+          <Link
+            key={cat.slug}
+            href={`/category/${cat.slug}`}
+            className="rounded border border-hack-green/20 bg-hack-panel/40 p-3 transition hover:border-hack-green/50"
+          >
+            <p className="font-mono text-sm font-bold text-slate-200">{cat.name}</p>
+            <p className="font-mono text-xs text-slate-500">{cat.count} missions</p>
+          </Link>
+        ))}
+      </div>
 
       <h2 className="mb-4 font-mono text-sm uppercase tracking-widest text-hack-green/70">
         Training Missions
