@@ -28,6 +28,7 @@ interface GameState {
   getWriteup: (levelId: string) => string;
   setUsername: (name: string) => void;
   recordScore: () => void;
+  syncFromSupabase: () => Promise<void>;
   reset: () => void;
 }
 
@@ -103,6 +104,35 @@ export const useGameStore = create<GameState>()(
 
       setUsername: (name: string) => set({ username: name.trim() }),
 
+      syncFromSupabase: async () => {
+        try {
+          const res = await fetch('/api/progress');
+          if (res.status === 401) {
+            get().reset();
+            return;
+          }
+          const data = await res.json();
+          if (data.error) {
+            get().reset();
+            return;
+          }
+          const completed = (data.completed as string[]) || [];
+          const max = Math.max(0, ...completed.map((id) => parseInt(id, 10)));
+          const next = levels.find((l) => parseInt(l.id, 10) === max + 1);
+          const unlocked = Array.from(new Set(['1', ...completed, ...(next ? [next.id] : [])]));
+          set({
+            completed,
+            xp: data.xp || 0,
+            username: data.username || get().username,
+            unlocked,
+          });
+          get().recordScore();
+        } catch (err) {
+          console.error('Progress sync failed', err);
+          get().reset();
+        }
+      },
+
       recordScore: () => {
         const state = get();
         if (!state.username) return;
@@ -126,7 +156,7 @@ export const useGameStore = create<GameState>()(
         writeups: {},
         username: '',
         leaderboard: [],
-      }),
+      })
     }),
     { name: 'hacklab-store' }
   )

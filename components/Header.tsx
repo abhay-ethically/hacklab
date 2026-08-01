@@ -9,24 +9,14 @@ import { createClient } from '@/lib/supabase/client';
 
 export default function Header() {
   const { xp, completed, soundEnabled, toggleSound, username, setUsername } = useGameStore();
+  const syncFromSupabase = useGameStore((s) => s.syncFromSupabase);
+  const reset = useGameStore((s) => s.reset);
   const rank = rankForCompleted(completed.length);
   const [session, setSession] = useState<any>(null);
   const supabase = createClient();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      if (data.session?.user) {
-        const name =
-          data.session.user.user_metadata?.user_name ||
-          data.session.user.user_metadata?.name ||
-          data.session.user.email?.split('@')[0] ||
-          'Operator';
-        setUsername(name);
-      }
-    });
-
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+    const apply = (session: any) => {
       setSession(session);
       if (session?.user) {
         const name =
@@ -35,14 +25,26 @@ export default function Header() {
           session.user.email?.split('@')[0] ||
           'Operator';
         setUsername(name);
+        syncFromSupabase();
+      } else {
+        reset();
       }
+    };
+
+    supabase.auth.getSession().then(({ data }) => {
+      apply(data.session);
+    });
+
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+      apply(session);
     });
 
     return () => sub.subscription.unsubscribe();
-  }, [supabase, setUsername]);
+  }, [supabase, setUsername, syncFromSupabase, reset]);
 
   const signOut = async () => {
     await supabase.auth.signOut();
+    reset();
   };
 
   return (
