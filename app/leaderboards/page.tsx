@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Trophy, RotateCcw, Check, Radio } from 'lucide-react';
+import { Trophy, Check, Radio } from 'lucide-react';
 import { levels } from '@/lib/levelData';
 import { useGameStore, rankForCompleted } from '@/lib/store';
 import { createClient } from '@/lib/supabase/client';
 
 export default function Leaderboards() {
-  const { xp, completed, reset, username, leaderboard } = useGameStore();
+  const { xp, completed, username, leaderboard } = useGameStore();
   const rank = rankForCompleted(completed.length);
   const [remote, setRemote] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -64,18 +64,9 @@ export default function Leaderboards() {
         </div>
       </div>
 
-      <div className="mb-6 flex items-center justify-between">
-        <div className="flex items-center gap-2 font-mono text-sm text-slate-300">
-          <Trophy className="h-4 w-4 text-hack-amber" />
-          Progress to Domain Admin
-        </div>
-        <button
-          onClick={reset}
-          className="flex items-center gap-2 rounded border border-hack-red/30 px-3 py-1.5 font-mono text-xs text-hack-red hover:bg-hack-red/10"
-        >
-          <RotateCcw className="h-3 w-3" />
-          Reset Progress
-        </button>
+      <div className="mb-6 flex items-center gap-2 font-mono text-sm text-slate-300">
+        <Trophy className="h-4 w-4 text-hack-amber" />
+        Progress to Domain Admin
       </div>
 
       <div className="mb-8 h-3 w-full overflow-hidden rounded bg-hack-panel">
