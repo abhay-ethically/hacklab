@@ -100,10 +100,6 @@ export default function ScenarioDetails({ level }: { level: Level }) {
           className="space-y-3 text-sm leading-relaxed text-slate-300"
         >
           <p>{level.description}</p>
-          <div className="flex items-start gap-2 rounded border border-hack-amber/20 bg-hack-amber/5 p-2 text-hack-amber">
-            <Target className="mt-0.5 h-4 w-4 shrink-0" />
-            <p>{level.objective}</p>
-          </div>
           <div className="flex items-center gap-2 font-mono text-xs text-slate-400">
             <AlertCircle className="h-4 w-4" />
             Target: <span className="text-hack-cyan">{level.target}</span>

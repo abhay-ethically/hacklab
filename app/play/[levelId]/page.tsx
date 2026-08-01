@@ -3,19 +3,34 @@
 import { useParams, notFound } from 'next/navigation';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Lock } from 'lucide-react';
 import { levels, getLevel } from '@/lib/levelData';
 import LevelSidebar from '@/components/LevelSidebar';
 import ScenarioDetails from '@/components/ScenarioDetails';
 import Terminal from '@/components/Terminal';
 import VirtualBrowser from '@/components/VirtualBrowser';
+import { useGameStore } from '@/lib/store';
 
 export default function PlayPage() {
   const params = useParams();
   const levelId = Array.isArray(params.levelId) ? params.levelId[0] : params.levelId;
   const level = getLevel(levelId);
   const [tab, setTab] = useState<'terminal' | 'browser'>('terminal');
+  const { completed, unlocked } = useGameStore();
+  const isOpen = completed.includes(levelId) || unlocked.includes(levelId);
 
   if (!level) return notFound();
+  if (!isOpen) {
+    return (
+      <div className="flex h-full flex-col items-center justify-center p-6 text-center">
+        <Lock className="mb-4 h-16 w-16 text-slate-600" />
+        <h1 className="mb-2 font-mono text-2xl font-bold text-hack-amber">Mission Locked</h1>
+        <p className="max-w-md font-mono text-sm text-slate-400">
+          Complete earlier missions to unlock this level. Skipping ahead is not allowed.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-full flex-col lg:flex-row">
