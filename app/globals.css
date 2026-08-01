@@ -5,18 +5,51 @@
 @import '@xterm/xterm/css/xterm.css';
 
 :root {
+  --hack-bg: #0a0d14;
+  --hack-panel: #111622;
+  --hack-green: #00ff66;
+  --hack-amber: #ffaa00;
+  --hack-red: #ff3366;
+  --hack-cyan: #00e5ff;
+  --hack-dim: rgba(0, 255, 102, 0.1);
+  color-scheme: dark;
+}
+
+[data-theme='light'] {
+  --hack-bg: #f8fafc;
+  --hack-panel: #ffffff;
+  --hack-green: #047857;
+  --hack-amber: #b45309;
+  --hack-red: #be123c;
+  --hack-cyan: #0e7490;
+  --hack-dim: rgba(4, 120, 87, 0.1);
+  color-scheme: light;
+}
+
+[data-theme='ocean'] {
+  --hack-bg: #001220;
+  --hack-panel: #001830;
+  --hack-green: #00e5ff;
+  --hack-amber: #f59e0b;
+  --hack-red: #ff4081;
+  --hack-cyan: #2979ff;
+  --hack-dim: rgba(0, 229, 255, 0.1);
   color-scheme: dark;
 }
 
 body {
-  background-color: #0a0d14;
+  background-color: var(--hack-bg);
   color: #e2e8f0;
   font-family: var(--font-mono), ui-monospace, Menlo, monospace;
 }
 
+[data-theme='light'] body {
+  color: #1e293b;
+}
+
 .xterm-viewport,
 .xterm-screen {
-  background-color: #0f131c !important;
+  background-color: var(--hack-panel) !important;
 }
 
 ::-webkit-scrollbar {
@@ -25,14 +58,14 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #0a0d14;
+  background: var(--hack-bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #163f2a;
+  background: color-mix(in srgb, var(--hack-green) 30%, transparent);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #00ff66;
+  background: var(--hack-green);
 }

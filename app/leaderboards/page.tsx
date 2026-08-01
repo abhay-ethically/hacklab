@@ -101,6 +101,7 @@ export default function Leaderboards() {
               <tr>
                 <th className="pb-2">#</th>
                 <th className="pb-2">Operator</th>
+                <th className="pb-2">Rank</th>
                 <th className="pb-2">XP</th>
                 <th className="pb-2">Missions</th>
               </tr>
@@ -115,6 +116,7 @@ export default function Leaderboards() {
                 >
                   <td className="py-2">{i + 1}</td>
                   <td className="py-2">{e.username || e.name}</td>
+                  <td className="py-2">{rankForCompleted(e.completed)}</td>
                   <td className="py-2">{e.xp}</td>
                   <td className="py-2">{e.completed}</td>
                 </tr>

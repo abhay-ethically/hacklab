@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 import CommandPalette from '@/components/CommandPalette';
 import NameModal from '@/components/NameModal';
 
@@ -28,6 +29,7 @@ export default function RootLayout({
         <CommandPalette />
         <NameModal />
         <main className="h-[calc(100vh-56px)] overflow-y-auto">{children}</main>
+        <Footer />
       </body>
     </html>
   );

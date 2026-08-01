@@ -6,6 +6,7 @@ import { Volume2, VolumeX, Terminal, Trophy, User, LogIn, LogOut } from 'lucide-
 import { motion } from 'framer-motion';
 import { useGameStore, rankForCompleted } from '@/lib/store';
 import { createClient } from '@/lib/supabase/client';
+import ThemeToggle from '@/components/ThemeToggle';
 
 export default function Header() {
   const { xp, completed, soundEnabled, toggleSound, username, setUsername } = useGameStore();
@@ -97,6 +98,8 @@ export default function Header() {
               <span className="hidden sm:inline">Sign in</span>
             </Link>
           )}
+
+          <ThemeToggle />
 
           <button
             onClick={toggleSound}

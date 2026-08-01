@@ -10,13 +10,13 @@ const config: Config = {
     extend: {
       colors: {
         hack: {
-          bg: '#0a0d14',
-          panel: '#111622',
-          green: '#00ff66',
-          amber: '#ffaa00',
-          red: '#ff3366',
-          cyan: '#00e5ff',
-          dim: 'rgba(0,255,102,0.1)',
+          bg: 'var(--hack-bg)',
+          panel: 'var(--hack-panel)',
+          green: 'var(--hack-green)',
+          amber: 'var(--hack-amber)',
+          red: 'var(--hack-red)',
+          cyan: 'var(--hack-cyan)',
+          dim: 'var(--hack-dim)',
         },
       },
       fontFamily: {
