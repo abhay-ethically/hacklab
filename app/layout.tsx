@@ -27,7 +27,7 @@ export default function RootLayout({
         <Header />
         <CommandPalette />
         <NameModal />
-        <main className="h-[calc(100vh-56px)] overflow-hidden">{children}</main>
+        <main className="h-[calc(100vh-56px)] overflow-y-auto">{children}</main>
       </body>
     </html>
   );

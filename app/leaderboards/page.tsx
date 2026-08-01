@@ -8,16 +8,22 @@ import { useGameStore, rankForCompleted } from '@/lib/store';
 import { createClient } from '@/lib/supabase/client';
 
 export default function Leaderboards() {
-  const { xp, completed, reset, username } = useGameStore();
+  const { xp, completed, reset, username, leaderboard } = useGameStore();
   const rank = rankForCompleted(completed.length);
   const [remote, setRemote] = useState<any[]>([]);
+  const [error, setError] = useState<string | null>(null);
   const supabase = createClient();
 
   useEffect(() => {
     const load = async () => {
-      const res = await fetch('/api/leaderboard');
-      const json = await res.json();
-      setRemote(json.leaderboard || []);
+      try {
+        const res = await fetch('/api/leaderboard');
+        const json = await res.json();
+        setRemote(json.leaderboard || []);
+        setError(null);
+      } catch (e) {
+        setError('Could not load live leaderboard.');
+      }
     };
     load();
 
@@ -85,9 +91,9 @@ export default function Leaderboards() {
         <Radio className="h-4 w-4 text-hack-red animate-pulse" /> Live Leaderboard
       </h2>
       <div className="mb-8 rounded border border-hack-green/20 bg-hack-panel/40 p-4">
-        {remote.length === 0 ? (
+        {remote.length === 0 && leaderboard.length === 0 && !error ? (
           <p className="font-mono text-xs text-slate-500">
-            No live scores yet. Sign in with GitHub and capture a flag to be the first.
+            No scores yet. Sign in with Google and capture a flag to be the first.
           </p>
         ) : (
           <table className="w-full text-left font-mono text-sm">
@@ -100,15 +106,15 @@ export default function Leaderboards() {
               </tr>
             </thead>
             <tbody className="text-slate-300">
-              {remote.map((e, i) => (
+              {(remote.length > 0 ? remote : leaderboard).map((e, i) => (
                 <tr
-                  key={e.user_id}
+                  key={e.user_id || e.name}
                   className={`border-t border-hack-green/10 ${
-                    e.username === username ? 'text-hack-green' : ''
+                    (e.username || e.name) === username ? 'text-hack-green' : ''
                   }`}
                 >
                   <td className="py-2">{i + 1}</td>
-                  <td className="py-2">{e.username}</td>
+                  <td className="py-2">{e.username || e.name}</td>
                   <td className="py-2">{e.xp}</td>
                   <td className="py-2">{e.completed}</td>
                 </tr>
@@ -117,6 +123,10 @@ export default function Leaderboards() {
           </table>
         )}
       </div>
+
+      {error && (
+        <p className="mb-4 font-mono text-xs text-hack-red">{error}</p>
+      )}
 
       <h2 className="mb-4 font-mono text-sm uppercase tracking-widest text-hack-green/70">
         Completed Missions
