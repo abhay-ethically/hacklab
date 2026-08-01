@@ -70,4 +70,17 @@ export const recon: Level[] = [
     xp: 120,
     hints: ['Run `subfinder -d target.com`', 'Look for `admin.target.com` in the output.'],
   },
+  {
+    id: '31',
+    title: 'Robots.txt Leak',
+    category: 'Web Reconnaissance',
+    description:
+      'The robots.txt file lists disallowed paths that should be hidden from crawlers.',
+    objective: 'Fetch /robots.txt and find the hidden admin path and flag.',
+    target: 'http://target/robots.txt',
+    type: 'terminal',
+    flag: 'FLAG{rob0ts_t0ld_s3cr3ts}',
+    xp: 100,
+    hints: ['Run `curl http://target/robots.txt`', 'Look for a Disallow entry with a path.'],
+  },
 ];

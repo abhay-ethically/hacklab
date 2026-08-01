@@ -27,4 +27,17 @@ export const network: Level[] = [
     xp: 100,
     hints: ['Check /var/backups/', 'Use `ssh -i /var/backups/id_rsa root@target`'],
   },
+  {
+    id: '33',
+    title: 'Telnet Banner Grab',
+    category: 'Network Exploitation',
+    description:
+      'An old telnet service leaks a version banner and a hardcoded credential.',
+    objective: 'Connect to the telnet port and read the banner to capture the flag.',
+    target: '10.0.0.6:23',
+    type: 'terminal',
+    flag: 'FLAG{teln3t_b4nn3r_r34d}',
+    xp: 100,
+    hints: ['Run `telnet 10.0.0.6 23`', 'The banner prints the service version and a flag.'],
+  },
 ];

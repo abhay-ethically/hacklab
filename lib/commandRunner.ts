@@ -181,6 +181,16 @@ export async function runCommand(raw: string, ctx: CommandContext): Promise<Comm
             `*/5 * * * * root /root/cleanup.sh ${ctx.level.flag}\n`,
         };
       }
+      if (ctx.level?.id === '32' && args[1] === '/proc/self/environ') {
+        return {
+          output:
+            'PATH=/usr/bin:/bin\n' +
+            'HOME=/home/user\n' +
+            'USER=user\n' +
+            'SECRET=super-secret-api-key\n' +
+            `FLAG=${ctx.level.flag}\n`,
+        };
+      }
       const content = readFile(ctx, args[1]);
       if (content === null) return { output: `cat: ${args[1]}: No such file or directory` };
       return { output: content };
@@ -429,6 +439,15 @@ export async function runCommand(raw: string, ctx: CommandContext): Promise<Comm
       if (url.includes('.git/HEAD')) {
         return { output: 'ref: refs/heads/main\nFLAG{git_exposed_head}' };
       }
+      if (url.includes('/robots.txt')) {
+        return {
+          output:
+            'User-agent: *\n' +
+            'Disallow: /admin_panel_v2/\n' +
+            'Disallow: /backup/\n' +
+            `${ctx.level ? ctx.level.flag : 'FLAG{rob0ts_t0ld_s3cr3ts}'}\n`,
+        };
+      }
       if (url.includes('s3') || url.includes('company-public-assets')) {
         return { output: '<?xml version="1.0"?>\n<ListBucketResult>\n  <Contents><Key>.env</Key></Contents>\n  <Contents><Key>logo.png</Key></Contents>\n</ListBucketResult>\nFLAG{s3_bucket_leak}' };
       }
@@ -463,6 +482,22 @@ export async function runCommand(raw: string, ctx: CommandContext): Promise<Comm
         };
       }
       return { output: 'usage: aws s3 ls <bucket> | aws s3 cp <s3-object> <local>' };
+    }
+
+    case 'telnet': {
+      if (args[1] === '10.0.0.6' && args[2] === '23') {
+        return {
+          output:
+            'Trying 10.0.0.6...\n' +
+            'Connected to 10.0.0.6.\n' +
+            'Escape character is \'^]\'.\n' +
+            'Welcome to TelnetD v1.2\n' +
+            'admin:password123\n' +
+            `${ctx.level ? ctx.level.flag : 'FLAG{teln3t_b4nn3r_r34d}'}\n` +
+            'Connection closed by foreign host.',
+        };
+      }
+      return { output: 'telnet: Could not resolve address' };
     }
 
     case 'ssh': {

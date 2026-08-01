@@ -53,4 +53,17 @@ export const linux: Level[] = [
     xp: 120,
     hints: ['Run `cat /etc/crontab`', 'Look for a wildcard `*` in a root-owned cron job.'],
   },
+  {
+    id: '32',
+    title: 'Process Environment Leak',
+    category: 'Linux Privilege Escalation',
+    description:
+      'A running process inherited a secret from its parent. Read the process environment to find it.',
+    objective: 'Inspect /proc/self/environ to find the hidden API key and flag.',
+    target: '/proc/self/environ',
+    type: 'terminal',
+    flag: 'FLAG{pr0c_3nv_l34k}',
+    xp: 100,
+    hints: ['Run `cat /proc/self/environ`', 'Look for the `SECRET=` variable.'],
+  },
 ];

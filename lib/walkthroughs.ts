@@ -184,4 +184,22 @@ export const WALKTHROUGHS: Record<string, string[]> = {
     'The PutObject success message includes the flag (FLAG{s3_public_wr1te_4cl}).',
     'Run `submit-flag <flag>`.',
   ],
+  '31': [
+    'Run `curl http://target/robots.txt` to fetch the robots file.',
+    'The file lists disallowed paths like /admin_panel_v2/ and /backup/.',
+    'The last line of the file contains the flag (FLAG{rob0ts_t0ld_s3cr3ts}).',
+    'Run `submit-flag <flag>`.',
+  ],
+  '32': [
+    'Run `cat /proc/self/environ` to inspect the running process environment.',
+    'The output contains PATH, HOME, USER, and a SECRET variable.',
+    'The last line is `FLAG=...` with the flag (FLAG{pr0c_3nv_l34k}).',
+    'Run `submit-flag <flag>`.',
+  ],
+  '33': [
+    'Run `telnet 10.0.0.6 23` to connect to the legacy telnet service.',
+    'The banner prints the service version, a hardcoded admin credential, and the flag.',
+    'The flag is (FLAG{teln3t_b4nn3r_r34d}).',
+    'Run `submit-flag <flag>`.',
+  ],
 };
