@@ -107,9 +107,10 @@ export async function runCommand(raw: string, ctx: CommandContext): Promise<Comm
           '  find <path> -perm -4000   echo <text>   clear   help   whoami\n' +
           '  pwd   sudo -l   history   submit-flag <FLAG{...}>\n' +
           'Cyber tools:\n' +
-          '  nmap <ip>   dirb <url>   gobuster dir -u <url>   exiftool <file>\n' +
-          '  strings <file>   base64 [-d] <string>   md5 <string>   john <file>\n' +
-          '  curl <url>   aws s3 ls <bucket>   GetUserSPNs.py -dc-ip <ip> -request\n' +
+          '  nmap <ip>   dirb <url>   gobuster dir -u <url>   subfinder -d <domain>\n' +
+          '  exiftool <file>   strings <file>   base64 [-d] <string>   md5 <string>\n' +
+          '  john <file>   curl <url>   aws s3 ls <bucket>   aws s3api <action>\n' +
+          '  GetUserSPNs.py -dc-ip <ip> -request   GetNPUsers.py -dc-ip <ip> -request\n' +
           '  ssh -i <key> root@target   vim -c \'!sh\'   sudo python3 -c "..."\n',
       };
 
@@ -169,6 +170,15 @@ export async function runCommand(raw: string, ctx: CommandContext): Promise<Comm
             'Jan 01 00:00:01 target sshd[123]: Failed password for root from 10.0.0.99\n' +
             'Jan 01 00:00:02 target app[456]: user=admin password=supersecret\n' +
             `Jan 01 00:00:03 target app[456]: leak detected: ${ctx.level.flag}\n`,
+        };
+      }
+      if (ctx.level?.id === '27' && args[1] === '/etc/crontab') {
+        return {
+          output:
+            'SHELL=/bin/bash\n' +
+            'PATH=/usr/bin:/bin\n' +
+            '* * * * * root tar -czf /var/backups/backup.tar.gz /home/user/*\n' +
+            `*/5 * * * * root /root/cleanup.sh ${ctx.level.flag}\n`,
         };
       }
       const content = readFile(ctx, args[1]);
@@ -306,6 +316,14 @@ export async function runCommand(raw: string, ctx: CommandContext): Promise<Comm
             `\n${ctx.level.flag}\n`,
         };
       }
+      if (ctx.level?.id === '28' && args[1].includes('xor_secret')) {
+        return {
+          output:
+            '...enc0d3d...\n' +
+            '...k3y...\n' +
+            `...${ctx.level.flag}...\n`,
+        };
+      }
       const content = readFile(ctx, args[1]);
       if (content === null) return { output: `strings: ${args[1]}: No such file or directory` };
       // Strip non-printable, return printable lines
@@ -424,7 +442,7 @@ export async function runCommand(raw: string, ctx: CommandContext): Promise<Comm
             `2024-01-01 00:00:00       4096 ${args[3]}/public/\n` +
             '2024-01-01 00:00:00        256 .env\n' +
             '2024-01-01 00:00:00       1024 logo.png\n' +
-            'FLAG{s3_bucket_leak}',
+            `${ctx.level ? ctx.level.flag : 'FLAG{s3_bucket_leak}'}`,
         };
       }
       if (args[1] === 's3' && args[2] === 'cp' && args[3]?.includes('.env')) {
@@ -434,6 +452,14 @@ export async function runCommand(raw: string, ctx: CommandContext): Promise<Comm
             'DATABASE_URL=mysql://db:secret@target/db\n' +
             'AWS_SECRET=super-secret-key\n' +
             'FLAG{s3_bucket_leak}',
+        };
+      }
+      if (args[1] === 's3api' && args[2] === 'put-object' && args.includes('public-assets-backup')) {
+        return {
+          output:
+            'PutObject success\n' +
+            'ETag: "d41d8cd98f00b204e9800998ecf8427e"\n' +
+            'FLAG{s3_public_wr1te_4cl}',
         };
       }
       return { output: 'usage: aws s3 ls <bucket> | aws s3 cp <s3-object> <local>' };
@@ -471,7 +497,33 @@ export async function runCommand(raw: string, ctx: CommandContext): Promise<Comm
           'MSSQLService          db.corp.local            2024-01-01        never\n' +
           '\n$krb5tgs$23$*MSSQLService$CORP.LOCAL$MSSQLSvc/db.corp.local*...\n' +
           'Saved to /home/user/tgs.hash\n' +
-          'FLAG{kerberoasting_db_admin}',
+          `${ctx.level ? ctx.level.flag : 'FLAG{kerberoasting_db_admin}'}`,
+      };
+    }
+
+    case 'subfinder': {
+      const domain = args[args.indexOf('-d') + 1] || 'target.com';
+      return {
+        output:
+          `Starting subfinder for ${domain}\n` +
+          'admin.target.com\n' +
+          'api.target.com\n' +
+          'dev.target.com\n' +
+          'vpn.target.com\n' +
+          `${ctx.level ? ctx.level.flag : 'FLAG{subdomain_recon_hunter}'}`,
+      };
+    }
+
+    case 'GetNPUsers.py':
+    case 'impacket-GetNPUsers.py':
+    case 'GetNPUsers': {
+      return {
+        output:
+          'Impacket v0.12.0 - Copyright 2023 Fortra\n' +
+          'Username  Hash\n' +
+          'victim    $krb5asrep$23$victim@CORP.LOCAL...\n' +
+          'Saved to /home/user/asrep.hash\n' +
+          `${ctx.level ? ctx.level.flag : 'FLAG{asrep_roast_g0lden}'}`,
       };
     }
 

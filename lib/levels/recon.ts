@@ -57,4 +57,17 @@ export const recon: Level[] = [
       'A typical Git HEAD file contains `ref: refs/heads/<branch>`.',
     ],
   },
+  {
+    id: '26',
+    title: 'Subdomain Enumeration',
+    category: 'Reconnaissance',
+    description:
+      'Discover hidden subdomains for target.com using a passive subdomain finder.',
+    objective: 'Run subfinder and extract the flag from the admin panel subdomain.',
+    target: 'target.com',
+    type: 'terminal',
+    flag: 'FLAG{subdomain_recon_hunter}',
+    xp: 120,
+    hints: ['Run `subfinder -d target.com`', 'Look for `admin.target.com` in the output.'],
+  },
 ];

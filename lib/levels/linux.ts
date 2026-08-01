@@ -40,4 +40,17 @@ export const linux: Level[] = [
     xp: 100,
     hints: ['Run `sudo -l`', 'Use python3 to spawn a shell with `sudo python3 -c`'],
   },
+  {
+    id: '27',
+    title: 'Cron Backdoor',
+    category: 'Linux Privilege Escalation',
+    description:
+      'A cron job runs as root and uses a wildcard in a writable directory, allowing command injection.',
+    objective: 'Inspect /etc/crontab and find the wildcard cron that exposes the flag.',
+    target: '/etc/crontab',
+    type: 'terminal',
+    flag: 'FLAG{cron_wildcard_g0d}',
+    xp: 120,
+    hints: ['Run `cat /etc/crontab`', 'Look for a wildcard `*` in a root-owned cron job.'],
+  },
 ];

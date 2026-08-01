@@ -31,4 +31,20 @@ export const cloud: Level[] = [
       'Cloud metadata lives at the link-local address 169.254.169.254.',
     ],
   },
+  {
+    id: '30',
+    title: 'S3 Public Write',
+    category: 'Cloud Security',
+    description:
+      'A bucket policy allows public PutObject. Abuse it to overwrite an exposed config file.',
+    objective: 'List the bucket and use aws s3api put-object to trigger the exposed write flag.',
+    target: 's3://public-assets-backup/',
+    type: 'terminal',
+    flag: 'FLAG{s3_public_wr1te_4cl}',
+    xp: 140,
+    hints: [
+      'Run `aws s3 ls s3://public-assets-backup/`',
+      'Then use `aws s3api put-object` to overwrite the bucket index.',
+    ],
+  },
 ];

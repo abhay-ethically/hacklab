@@ -154,4 +154,34 @@ export const WALKTHROUGHS: Record<string, string[]> = {
     'The response also contains the flag (FLAG{git_exposed_head}).',
     'Run `submit-flag <flag>`.',
   ],
+  '26': [
+    'Run `subfinder -d target.com` to enumerate subdomains.',
+    'The output lists `admin.target.com`, `api.target.com`, `dev.target.com`, and `vpn.target.com`.',
+    'The flag (FLAG{subdomain_recon_hunter}) is printed at the end of the results.',
+    'Run `submit-flag <flag>`.',
+  ],
+  '27': [
+    'Run `cat /etc/crontab` to inspect scheduled cron jobs.',
+    'Notice the wildcard cron that runs `/root/cleanup.sh` every 5 minutes.',
+    'The crontab entry also contains the flag (FLAG{cron_wildcard_g0d}).',
+    'Run `submit-flag <flag>`.',
+  ],
+  '28': [
+    'The ciphertext is stored at `/home/user/xor_secret.bin`.',
+    'Run `strings /home/user/xor_secret.bin` to extract printable fragments.',
+    'The key is `k`; the output reveals the flag (FLAG{xor_single_byte_k3y}).',
+    'Run `submit-flag <flag>`.',
+  ],
+  '29': [
+    'Run `impacket-GetNPUsers.py -dc-ip 10.0.0.10 -request CORP.LOCAL/victim`.',
+    'The account does not require Kerberos pre-authentication, so an AS-REP is returned.',
+    'The output saves the hash and prints the flag (FLAG{asrep_roast_g0lden}).',
+    'Run `submit-flag <flag>`.',
+  ],
+  '30': [
+    'Run `aws s3 ls s3://public-assets-backup/` to list the bucket.',
+    'Then use `aws s3api put-object --bucket public-assets-backup --key index.html --body index.html`.',
+    'The PutObject success message includes the flag (FLAG{s3_public_wr1te_4cl}).',
+    'Run `submit-flag <flag>`.',
+  ],
 };

@@ -14,4 +14,17 @@ export const crypto: Level[] = [
     xp: 100,
     hints: ['Try `john /home/user/hash.txt`', 'The plaintext is one of the worst passwords.'],
   },
+  {
+    id: '28',
+    title: 'XOR Ciphertext',
+    category: 'Cryptography',
+    description:
+      'A secret message was encrypted with a single-byte XOR key. The key is hidden in the filename.',
+    objective: 'Use the known XOR key to decode /home/user/xor_secret.bin and recover the flag.',
+    target: '/home/user/xor_secret.bin',
+    type: 'terminal',
+    flag: 'FLAG{xor_single_byte_k3y}',
+    xp: 120,
+    hints: ['Try `strings /home/user/xor_secret.bin`', 'The key is the single character `k`.'],
+  },
 ];
