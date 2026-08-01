@@ -1,5 +1,11 @@
 -- Enable realtime for leaderboard updates
-create publication if not exists supabase_realtime;
+do $$
+begin
+  if not exists (select 1 from pg_publication where pubname = 'supabase_realtime') then
+    create publication supabase_realtime;
+  end if;
+end $$;
+
 alter publication supabase_realtime add table public.leaderboard_totals;
 
 -- Per-level completions
