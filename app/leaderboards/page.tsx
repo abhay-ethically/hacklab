@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Check, Radio } from 'lucide-react';
 import { levels } from '@/lib/levelData';
@@ -12,12 +12,12 @@ export default function Leaderboards() {
   const rank = rankForCompleted(completed.length);
   const [remote, setRemote] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await fetch('/api/leaderboard');
+        const res = await fetch('/api/leaderboard', { cache: 'no-store' });
         const json = await res.json();
         setRemote(json.leaderboard || []);
         setError(null);
@@ -26,6 +26,8 @@ export default function Leaderboards() {
       }
     };
     load();
+
+    const interval = setInterval(load, 5000);
 
     const channel = supabase
       .channel('leaderboard')
@@ -39,6 +41,7 @@ export default function Leaderboards() {
       .subscribe();
 
     return () => {
+      clearInterval(interval);
       supabase.removeChannel(channel);
     };
   }, [supabase]);
